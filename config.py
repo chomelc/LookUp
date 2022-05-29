@@ -11,6 +11,11 @@ def create_api():
     access_token = os.getenv("TWITTER_ACCESS_TOKEN")
     access_token_secret = os.getenv("TWITTER_ACCESS_TOKEN_SECRET")
 
+    print(f"consumer key: {consumer_key}")
+    print(f"consumer secret: {consumer_secret}")
+    print(f"access token: {access_token}")
+    print(f"access token secret: {access_token_secret}")
+
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth, wait_on_rate_limit=True,
