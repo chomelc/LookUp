@@ -9,6 +9,7 @@ jobs:
   post_tweet:
     name: Post daily tweet
     runs-on: ubuntu-latest
+    environment: LookUp Environment
     steps:
       - uses: chomelc/LookUp@main
         with:
