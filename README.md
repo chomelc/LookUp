@@ -8,6 +8,8 @@
 ## :bookmark_tabs: Dependencies
 
 - [Python 3](https://www.python.org/downloads/)
+- [python-dotenv](https://pypi.org/project/python-dotenv/)
+- [Tweepy](https://www.tweepy.org/)
 
 Install all the dependencies with:
 
