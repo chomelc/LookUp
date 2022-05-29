@@ -9,10 +9,9 @@ jobs:
   post_tweet:
     name: Post daily tweet
     runs-on: ubuntu-latest
-    environment: LookUp Environment
     steps:
       - uses: chomelc/LookUp@main
-        with:
+        env:
           NASA_API_KEY: ${{ secrets.NASA_API_KEY }}
           TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
           TWITTER_API_KEY_SECRET: ${{ secrets.TWITTER_API_KEY_SECRET }}
