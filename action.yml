@@ -1,0 +1,33 @@
+name: "LookUp Bot"
+author: Clémence Chomel
+description: "A twitter bot that publishes near earth objects informations. ☄️"
+
+inputs:
+  NASA_API_KEY:
+    description: "NASA API key"
+    required: true
+    default: ${{ nasa.api_key }}
+  TWITTER_API_KEY:
+    description: "Twitter API key"
+    required: true
+    default: ${{ twitter.api_key }}
+  TWITTER_API_KEY_SECRET:
+    description: "Twitter API key secret"
+    required: true
+    default: ${{ twitter.api_key_secret }}
+  TWITTER_BEARER_TOKEN:
+    description: "Twitter Bearer token"
+    required: true
+    default: ${{ twitter.bearer_token }}
+  TWITTER_ACCESS_TOKEN:
+    description: "Twitter access token"
+    required: true
+    default: ${{ twitter.access_token }}
+  TWITTER_ACCESS_TOKEN_SECRET:
+    description: "Twitter access token secret"
+    required: true
+    default: ${{ twitter.access_token_secret }}
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
