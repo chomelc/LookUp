@@ -1,4 +1,9 @@
-# :comet: Look Up
+<h1>
+  <img src="assets/img/lookup-logo.png" width="30" title="hover text">
+  Look Up
+</h1>
+
+:art: _Comet Icon designed by [BZZRINCANTATION](https://www.flaticon.com/authors/bzzrincantation)._
 
 ## :hammer: Tools
 
