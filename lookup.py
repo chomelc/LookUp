@@ -23,9 +23,9 @@ def getData(url):
     return json.loads(data)
 
 
-def getPictureOfTheDay(api_key):
+def getMediaOfTheDay(api_key):
     url = f"https://api.nasa.gov/planetary/apod?api_key={api_key}"
-    return getData(url)["url"]
+    return getData(url)
 
 
 def getNEOsByApproachDate(date, api_key):
@@ -63,27 +63,37 @@ def createTweetContent():
     content += f"  🚨 Potentially hazardous asteroids: {pot_hazardous_NEOs} ({proportion}%)\n"
 
     content += f"\n#NASA #NASAAPI #space #comet #asteroid #twitterbot #bot\n"
-    content += f"Astronomy Picture of the Day 🔽"
+    content += f"\nAstronomy Media of the Day 🔽"
+
     # return tweet content
     return content
 
 
 def createTweet(api):
-    filename = 'temp.jpg'
-    request = requests.get(getPictureOfTheDay(api_key), stream=True)
-    if request.status_code == 200:
-        with open(filename, 'wb') as image:
-            for chunk in request:
-                image.write(chunk)
+    content = createTweetContent()
+    media = getMediaOfTheDay(api_key)
 
-        # post tweet with image of the day
-        tweet = api.update_with_media(filename, status=createTweetContent())
-        os.remove(filename)
+    if (media["media_type"] == "video"):
+        content += f'\n{media["url"]}'
+        api.update_status(content)
     else:
-        print("Unable to download image.")
+        filename = 'temp.jpg'
+        request = requests.get(media["url"], stream=True)
+        if request.status_code == 200:
+            with open(filename, 'wb') as image:
+                for chunk in request:
+                    image.write(chunk)
+
+            # post tweet with image of the day
+            api.update_with_media(filename, status=content)
+            os.remove(filename)
+        else:
+            print("Unable to download image.")
+
+    # print generated content to the console
+    print(f"Generated tweet: \n{content}")
 
 
 if __name__ == "__main__":
     api = create_api()
-    print(f"Generated tweet: \n{createTweetContent()}")
     createTweet(api)
