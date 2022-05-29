@@ -3,6 +3,8 @@
   Look Up
 </h1>
 
+[![Look Up](assets/img/lookup-preview.png)](https://twitter.com/lookupbot)
+
 :art: _Comet Icon designed by [BZZRINCANTATION](https://www.flaticon.com/authors/bzzrincantation)._
 
 ## :hammer: Tools
