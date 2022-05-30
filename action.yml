@@ -1,6 +1,6 @@
 name: "LookUp Bot"
 author: Clémence Chomel
-description: "A twitter bot that publishes near earth objects informations. ☄️"
+description: "A twitter bot that publishes daily near earth objects informations. ☄️"
 
 inputs:
   NASA_API_KEY:
