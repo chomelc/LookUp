@@ -79,29 +79,54 @@ def create_daily_tweet_content():
     content += f"  🚨 Potentially hazardous asteroids: {pot_hazardous_NEOs} ({proportion}%)\n"
     content += f"  🌎 Closest near earth object: {get_closest_neo(data, today)}\n"
 
-    content += f"\n#NASA #NASAAPI #space #comet #asteroid #twitterbot #bot\n"
-    content += f"\nAstronomy Media of the Day 🔽"
+    content += f"\n#NASA #NASAAPI #space #comet #asteroid #twitterbot #bot"
 
     # return tweet content
     return content
 
 
+def create_daily_subtweet_content():
+    content = f"Astronomy Media of the Day 🔽"
+    return content
+
+
 def tweet_with_media(content, media):
-    api.update_with_media(media, status=content)
+    tweet = api.update_with_media(media, status=content)
+    return tweet
 
 
 def tweet_without_media(content):
-    api.update_status(content)
+    tweet = api.update_status(content)
+    return tweet
+
+
+def reply_tweet_with_media(tweet_id, content, media):
+    api.update_with_media(
+        media, status=content, in_reply_to_status_id=tweet_id, auto_populate_reply_metadata=True)
+
+
+def reply_tweet_without_media(tweet_id, content):
+    api.update_status(content, in_reply_to_status_id=tweet_id,
+                      auto_populate_reply_metadata=True)
 
 
 def create_daily_tweet():
     content = create_daily_tweet_content()
+
+    # print generated content to the console
+    print(f"Generated tweet: \n{content}")
+    # return tweet to get tweet_id for subtweet
+    return tweet_without_media(content)
+
+
+def create_daily_subtweet(tweet):
+    content = create_daily_subtweet_content()
     media = get_media_of_the_day(api_key)
 
     if (media["media_type"] == "video"):
         content += f'\n{media["url"]}'
         # post tweet with video of the day
-        tweet_without_media(content)
+        reply_tweet_without_media(tweet.id_str, content)
     else:
         filename = 'temp.jpg'
         request = requests.get(media["url"], stream=True)
@@ -111,14 +136,15 @@ def create_daily_tweet():
                     image.write(chunk)
 
             # post tweet with image of the day
-            tweet_with_media(content, media=filename)
+            reply_tweet_with_media(tweet.id_str, content, media=filename)
             os.remove(filename)
         else:
             print("Unable to download image.")
 
     # print generated content to the console
-    print(f"Generated tweet: \n{content}")
+    print(f"\nGenerated subtweet (in response to {tweet.id_str}): \n{content}")
 
 
 if __name__ == "__main__":
-    create_daily_tweet()
+    tweet = create_daily_tweet()
+    create_daily_subtweet(tweet)
