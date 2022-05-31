@@ -62,31 +62,57 @@ def get_closest_neo(data, today):
     return(f"{min_name} - {'{:.2f}'.format(min_km)}km / {'{:.2f}'.format(min_miles)}mi")
 
 
+def create_title_string():
+    return f"Beep beep, here's {get_today_as_text()} update:\n\n"
+
+
+def create_approaching_neos_string(total):
+    return f"  ☄️ Approaching near earth objects: {total}\n"
+
+
+def create_hazardous_neos_string(pot_hazardous_NEOs, proportion):
+    return f"  🚨 Potentially hazardous asteroids: {pot_hazardous_NEOs} ({proportion}%)\n"
+
+
+def create_closest_neo_string(data, today):
+    return f"  🌎 Closest near earth object: {get_closest_neo(data, today)}\n"
+
+
+def create_hashtags_string():
+    return f"\n#NASA #NASAAPI #space #comet #asteroid #twitterbot #bot"
+
+
+def create_media_of_the_day_string(orientation):
+    content = f"Astronomy Media of the Day "
+    content += "🔽" if orientation == "down" else "▶️"
+    return content
+
+
 def create_daily_tweet_content():
     today = get_today()
-    content = f"Beep beep, here's {get_today_as_text()} update:\n\n"
+    content = create_title_string()
 
     # get data
     data = get_neos_by_approach_date(today, api_key)
 
     # total NEOs
     total = get_number_of_neos(data)
-    content += f"  ☄️ Approaching near earth objects: {total}\n"
+    content += create_approaching_neos_string(total)
 
     # potentially hazardous asteroids
     pot_hazardous_NEOs = get_number_of_potentially_hazardous_neos(data, today)
     proportion = "{:.0f}".format((pot_hazardous_NEOs/total)*100)
-    content += f"  🚨 Potentially hazardous asteroids: {pot_hazardous_NEOs} ({proportion}%)\n"
-    content += f"  🌎 Closest near earth object: {get_closest_neo(data, today)}\n"
+    content += create_hazardous_neos_string(pot_hazardous_NEOs, proportion)
+    content += create_closest_neo_string(data, today)
 
-    content += f"\n#NASA #NASAAPI #space #comet #asteroid #twitterbot #bot"
+    content += create_hashtags_string()
 
     # return tweet content
     return content
 
 
 def create_daily_subtweet_content():
-    content = f"Astronomy Media of the Day 🔽"
+    content = create_media_of_the_day_string(orientation="down")
     return content
 
 
