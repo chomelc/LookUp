@@ -190,6 +190,10 @@ def create_daily_subtweet(tweet):
 
             # post tweet with image of the day
             reply_tweet_with_media(tweet.id_str, content, media=filename)
+
+            # update profile banner with image of the day
+            api.update_profile_banner(filename)
+
             os.remove(filename)
         else:
             print("Unable to download image.")
