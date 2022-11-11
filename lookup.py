@@ -83,7 +83,7 @@ def create_hashtags_string():
 
 
 def create_media_of_the_day_string(orientation):
-    content = f"Astronomy Media of the Day "
+    content = f"Astronomy media of the day "
     content += "🔽" if orientation == "down" else "▶️"
     return content
 
@@ -101,7 +101,7 @@ def create_daily_tweet_content():
 
     # potentially hazardous asteroids
     pot_hazardous_NEOs = get_number_of_potentially_hazardous_neos(data, today)
-    proportion = "{:.0f}".format((pot_hazardous_NEOs/total)*100)
+    proportion = "{:.0f}".format((pot_hazardous_NEOs / total) * 100)
     content += create_hazardous_neos_string(pot_hazardous_NEOs, proportion)
     content += create_closest_neo_string(data, today)
 
