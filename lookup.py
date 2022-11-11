@@ -4,6 +4,8 @@ import requests
 import json
 from datetime import date
 from config import create_api
+from PIL import Image
+from urllib.parse import urlparse
 
 load_dotenv()
 api_key = os.getenv("NASA_API_KEY")
@@ -16,6 +18,25 @@ def get_today():
 
 def get_today_as_text():
     return date.today().strftime("%B %d, %Y")
+
+
+def get_ext(url):
+    """Return the filename extension from url, or ''."""
+    parsed = urlparse(url)
+    root, ext = os.path.splitext(parsed.path)
+    return ext[1:]  # we don't want the leading '.'
+
+
+def get_file_size_kb(file):
+    return os.path.getsize(file) / 1024
+
+
+def compress_image(file):
+    print("Compressing image...")
+    img = Image.open(file)
+    x, y = img.size
+    img = img.resize((int(x * 0.75), int(y * 0.75)), Image.ANTIALIAS)
+    img.save(file, quality=95)
 
 
 def get_data(url):
@@ -148,18 +169,24 @@ def create_daily_tweet():
 def create_daily_subtweet(tweet):
     content = create_daily_subtweet_content()
     media = get_media_of_the_day(api_key)
+    url = media["url"]
+    ext = get_ext(url)
 
-    if (media["media_type"] == "video"):
-        content += f'\n{media["url"]}'
+    if (media["media_type"] == "video" or ext == "gif"):
+        content += f'\n{url}'
         # post tweet with video of the day
         reply_tweet_without_media(tweet.id_str, content)
     else:
         filename = 'temp.jpg'
-        request = requests.get(media["url"], stream=True)
+        request = requests.get(url, stream=True)
         if request.status_code == 200:
             with open(filename, 'wb') as image:
                 for chunk in request:
                     image.write(chunk)
+
+            # compress image if it exceeds 3072kb
+            if (get_file_size_kb(filename) >= 3072):
+                compress_image(filename)
 
             # post tweet with image of the day
             reply_tweet_with_media(tweet.id_str, content, media=filename)
